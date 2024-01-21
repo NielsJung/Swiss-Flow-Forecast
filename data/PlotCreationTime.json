@@ -1,18 +1,18 @@
 {
   "Areuse (Boudry)": {
     "StationID": 2480,
-    "Forecasttime": "2024-01-21 07:45:13"
+    "Forecasttime": "2024-01-21 16:51:53"
   },
   "Verzasca (Lavertezzo)": {
     "StationID": 2605,
-    "Forecasttime": "2024-01-21 07:45:31"
+    "Forecasttime": "2024-01-21 16:52:44"
   },
   "Doubs (Sortie du lac des Brenets)": {
     "StationID": 2247,
-    "Forecasttime": "2024-01-21 07:45:46"
+    "Forecasttime": "2024-01-21 16:52:52"
   },
   "Weisse Lütschine (Zweilütschinen)": {
     "StationID": 2200,
-    "Forecasttime": "2024-01-21 07:45:54"
+    "Forecasttime": "2024-01-21 16:56:39"
   }
 }

@@ -5,6 +5,7 @@ import matplotlib.dates as mdates
 import seaborn as sns
 import pytz
 import json
+import numpy as np
 from azure.cosmos import CosmosClient
 from datetime import datetime
 sns.set_theme()
@@ -46,7 +47,7 @@ def create_new_plot(station_id, img_path):
     measurements=river_data["Measurements"]
     measurements=dict_to_df(measurements)
     start, stopp=measurements.index.min(),measurements.index.max()
-
+    max_value=np.max(measurements)
     try:
         forecasts=river_data["Prediction"]
     except:
@@ -62,18 +63,21 @@ def create_new_plot(station_id, img_path):
 
 
     st.subheader(choosen_river)
+    colors=["darkcyan", "limegreen", "olive", "red"]
     linestyles = ['dotted', 'dashed','dashdot', (0, (3, 5, 1, 5, 1, 5)),(0, (3, 10, 1, 10, 1, 10)),(0, (5, 1))]
     num=0
     fig, ax = plt.subplots()
     ax.plot(measurements.index, measurements.values,marker='o',c="b", markersize=2.0, label="Measured")
     for weather_model in forecasts:
-        ax.plot(forecasts[weather_model].index, forecasts[weather_model].values, c="limegreen", label=weather_model.replace("_seamless", '').upper(),linestyle=linestyles[num])
+        ax.plot(forecasts[weather_model].index, forecasts[weather_model].values, c=colors[num], label=weather_model.replace("_seamless", '').upper(),linestyle='dashed')
         num=num+1
+        max_value=np.max([max_value,np.max(forecasts[weather_model])])
 
     ax.xaxis.set_major_locator(mdates.DayLocator())  # Ein Label pro Tag
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m'))  # Formatierung ohne Jahr
     ax.legend()
     ax.set_xlim(start, stopp)
+    ax.set_ylim(0, np.max([10, 1.1*max_value]))
     ax.set_ylabel( "Flow [$m^3/s$]")
     plt.savefig(img_path, dpi=800)
     plt.close()
