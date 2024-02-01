@@ -1,5 +1,5 @@
 import streamlit as st
-from PIL import Image
+
 
 st.set_page_config(
     page_title="Model",
@@ -19,7 +19,3 @@ img_path="./data/Model Architecture.jpg"
 output_image_path="./data/Model Architecture2.jpg"
 st.image(img_path, caption="Model Architecture", use_column_width=True)
 
-img = Image.open(img_path)
-
-# Bild speichern
-img.save(output_image_path)
