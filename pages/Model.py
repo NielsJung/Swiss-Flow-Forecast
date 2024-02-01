@@ -14,5 +14,5 @@ st.write("• Snowfall")
 st.write("• Soil Moisture")
 st.write("• Cloud Cover")
 st.write("A separate forecast is created and displayed for each weather model.")
-img_path="data\Model Architecture.jpg"
+img_path="./data/Model Architecture.jpg"
 st.image(img_path, caption="Model Architecture", use_column_width=True)
