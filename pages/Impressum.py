@@ -6,7 +6,7 @@ st.set_page_config(
 #cwd = os.getcwd()
 # Streamlit App
 st.header('Impressum', divider='rainbow')
-st.text("Niels Jung")
-st.text("jung_niels@web.de")
+st.write("Niels Jung")
+st.write("jung_niels@web.de")
 
 
