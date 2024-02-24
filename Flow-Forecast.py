@@ -8,6 +8,7 @@ import json
 import numpy as np
 from azure.cosmos import CosmosClient
 from datetime import datetime
+import matplotlib.lines
 sns.set_theme()
 
 def dict_to_df(data_dict):
@@ -18,6 +19,9 @@ def dict_to_df(data_dict):
 
 
 def create_new_plot(station_id):
+
+
+
     river_data=query_forecast(station_id)
 
     measurements=river_data["Measurements"]
@@ -38,20 +42,50 @@ def create_new_plot(station_id):
         stopp=max([stopp, forecasts[weather_model].index.max().replace(tzinfo=pytz.UTC)])
 
 
+    def reorderLegend(ax=None, order=None):
+        handles, labels = ax.get_legend_handles_labels()
+        info = dict(zip(labels, handles))
+
+        print(info)
+
+        new_handles = [info[l] for l in order]
+        return new_handles, order
+
     st.subheader(choosen_river)
     colors=["darkcyan", "limegreen", "olive", "red"]
     linestyles = ['dotted', 'dashed','dashdot', (0, (3, 5, 1, 5, 1, 5)),(0, (3, 10, 1, 10, 1, 10)),(0, (5, 1))]
     num=0
+    
+    title="$\\bf{Weathermodels}$"
     fig, ax = plt.subplots()
-    ax.plot(measurements.index, measurements.values,marker='o',c="b", markersize=2.0, label="Measured")
+    ax.plot(measurements.index, measurements.values,marker='o',c="b", markersize=2.0, label="Measurements")
+    ax.add_line(matplotlib.lines.Line2D([], [], color="none", label=title))
+    all_labels=["Measurements", title]
+
     for weather_model in forecasts:
-        ax.plot(forecasts[weather_model].index, forecasts[weather_model].values, c=colors[num], label=weather_model.replace("_seamless", '').upper(),linestyle='dashed')
+        label=weather_model.replace("_seamless", '').upper()
+        ax.plot(forecasts[weather_model].index, forecasts[weather_model].values, c=colors[num],linestyle='dashed', label=label)
         num=num+1
         max_value=np.max([max_value,np.max(forecasts[weather_model])])
+        all_labels.append(label)
+        
+
+    handles, labels = reorderLegend(ax=ax, order=all_labels)
+    leg = ax.legend(handles=handles, labels=labels)
+    for item, label in zip(leg.legendHandles, leg.texts):
+        if label._text  in [title]:
+            width=item.get_window_extent(fig.canvas.get_renderer()).width
+            label.set_ha('left')
+            label.set_position((-2*width,0))
+    
+
+    
 
     ax.xaxis.set_major_locator(mdates.DayLocator())  # Ein Label pro Tag
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m'))  # Formatierung ohne Jahr
-    ax.legend()
+
+
+    #ax.legend()
     ax.set_xlim(start, stopp)
     ax.set_ylim(0, np.max([10, 1.1*max_value]))
     ax.set_ylabel( "Flow [$m^3/s$]")
