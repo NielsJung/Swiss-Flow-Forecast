@@ -46,7 +46,6 @@ def create_new_plot(station_id):
         handles, labels = ax.get_legend_handles_labels()
         info = dict(zip(labels, handles))
 
-        print(info)
 
         new_handles = [info[l] for l in order]
         return new_handles, order
